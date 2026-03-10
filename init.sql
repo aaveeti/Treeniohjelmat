@@ -1,12 +1,12 @@
-DELETE FROM Levels;
-DELETE FROM WorkoutTypes;
+DELETE FROM levels;
+DELETE FROM workout_types;
 
-INSERT INTO Levels (title) VALUES('Aloittelija');
-INSERT INTO Levels (title) VALUES('Keskitaso');
-INSERT INTO Levels (title) VALUES('Edistynyt');
-INSERT INTO Levels (title) VALUES('Eliitti');
+INSERT INTO levels (title) VALUES('Aloittelija');
+INSERT INTO levels (title) VALUES('Keskitaso');
+INSERT INTO levels (title) VALUES('Edistynyt');
+INSERT INTO levels (title) VALUES('Eliitti');
 
-INSERT INTO WorkoutTypes (title) VALUES('Lihaskasvu');
-INSERT INTO WorkoutTypes (title) VALUES('Voima');
-INSERT INTO WorkoutTypes (title) VALUES('Kestävyys');
-INSERT INTO WorkoutTypes (title) VALUES('Huolto ja liikkuvuus');
+INSERT INTO workout_types (title) VALUES('Lihaskasvu');
+INSERT INTO workout_types (title) VALUES('Voima');
+INSERT INTO workout_types (title) VALUES('Kestävyys');
+INSERT INTO workout_types (title) VALUES('Huolto ja liikkuvuus');

@@ -1,20 +1,20 @@
-CREATE TABLE Users (
+CREATE TABLE users (
     id INTEGER PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL
 );
 
-CREATE TABLE Levels (
+CREATE TABLE levels (
     id INTEGER PRIMARY KEY,
     title TEXT
 );
 
-CREATE TABLE WorkoutTypes (
+CREATE TABLE workout_types (
     id INTEGER PRIMARY KEY,
     title TEXT
 );
 
-CREATE TABLE Programs (
+CREATE TABLE programs (
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
@@ -23,12 +23,12 @@ CREATE TABLE Programs (
     type_id INTEGER NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (user_id) REFERENCES Users(id),
-    FOREIGN KEY (level_id) REFERENCES Levels(id),
-    FOREIGN KEY (type_id) REFERENCES WorkoutTypes(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (level_id) REFERENCES levels(id),
+    FOREIGN KEY (type_id) REFERENCES workout_types(id)
 );
 
-CREATE TABLE Reviews (
+CREATE TABLE reviews (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL,
     program_id INTEGER NOT NULL,
@@ -36,6 +36,6 @@ CREATE TABLE Reviews (
     comment TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (user_id) REFERENCES Users(id),
-    FOREIGN KEY (program_id) REFERENCES Programs(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (program_id) REFERENCES programs(id)
 );
