@@ -1,7 +1,7 @@
 CREATE TABLE Users (
     id INTEGER PRIMARY KEY,
-    username TEXT UNIQUE,
-    password_hash TEXT
+    username TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL
 );
 
 CREATE TABLE Levels (
