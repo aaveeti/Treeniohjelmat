@@ -2,15 +2,25 @@
 <html>
 
 <head>
-  <title>Etusivu</title>
+  <title>Treeniohjelmat</title>
 </head>
 
 <body>
-  <h1>Treeniohjelmat</h1>
-    
+  <h1>Etusivu</h1>
+  {% if not session.username %}
   <p>
-    Testi
+    <a href="\login">Kirjaudu sisään</a>
+    <a href="\register">Rekisteröidy</a>
   </p>
+  {% endif %}
+  
+  {% if session.username %}  
+  <p>
+    Olet kirjautunut nimellä {{ session.username }}<br>
+    <a href="\logout">Kirjaudu ulos</a>
+  </p>
+  {% endif %}
+
 </body>
 
 </html>
