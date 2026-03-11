@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Julkaise treeniohjelma</title>
+</head>
+
+<body>
+  <h1>Julkaise treeniohjelma</h1>
+  <form action="/create_program" method="post">
+    <p>
+      Otsikko: <br />
+      <input type="text" name="title" />
+    </p>
+    <p>
+      Kuvaus: <br />
+      <textarea name="content" rows="8" cols="60"></textarea>
+    </p>
+    <p>
+      Kokemustaso: <br />
+      {% for level in levels %}
+      <input type="radio" name="experience" value="{{ level }}" /> {{ level }}
+      {% endfor %}
+    </p>
+    <p>
+      Treeniohjelman tavoite: <br />
+      {% for type in types %}
+      <input type="radio" name="workout_type" value="{{ type }}" /> {{ type }}
+      {% endfor %}
+    </p>
+    <input type="submit" value="Julkaise ohjelma" />
+  </form>
+</body>
+
+</html>

@@ -12,12 +12,40 @@ app.secret_key = config.secret_key
 def index():
     return render_template("index.html")
 
+@app.route("/new_program")
+def new_program():
+    levels_data = db.get_levels()
+    workout_type_data = db.get_workout_type()
+    return render_template("new_program.html", levels=levels_data, types=workout_type_data)
+
+@app.route("/create_program", methods=["POST"])
+def create_program():
+    user_id = session.get("user_id")
+    title = request.form["title"]
+    content = request.form["content"]
+    level_name = request.form["experience"]
+    level_result = db.query("SELECT id FROM levels WHERE title = ?", [level_name])
+    type_name = request.form["workout_type"]
+    type_result = db.query("SELECT id FROM workout_types WHERE title = ?", [type_name])
+
+    level_id = level_result[0]["id"]
+    type_id = type_result[0]["id"]
+
+    try:
+        sql = """INSERT INTO programs (title, content, user_id, level_id, type_id)
+                 VALUES (?, ?, ?, ?, ?)"""
+        db.execute(sql, [title, content, user_id, level_id, type_id])
+    except sqlite3.IntegrityError:
+        return "Tapahtui virhe"
+    
+    return "Treeniohjelma luotu"
+
 @app.route("/register")
 def register():
     return render_template("register.html")
 
-@app.route("/create", methods=["POST"])
-def create():
+@app.route("/create_user", methods=["POST"])
+def create_user():
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
@@ -38,20 +66,24 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
 
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        
-        sql = "SELECT password_hash FROM users WHERE username = ?"
-        password_hash = db.query(sql, [username])[0][0]
+    username = request.form["username"]
+    password = request.form["password"]
 
-        if check_password_hash(password_hash, password):
-            session["username"] = username
-            return redirect("/")
-        else:
-            return "VIRHE: väärä tunnus tai salasana"
+    result = db.query("SELECT id, password_hash FROM users WHERE username = ?", [username])
+    
+    if not result:
+        return "VIRHE: väärä tunnus tai salasana"
+    
+    user = result[0]
+    
+    if check_password_hash(user["password_hash"], password):
+        session["username"] = username
+        session["user_id"] = user["id"]
+        return redirect("/")
+    else:
+        return "VIRHE: väärä tunnus tai salasana"
 
 @app.route("/logout")
 def logout():
-    del session["username"]
+    session.clear()
     return redirect("/")
