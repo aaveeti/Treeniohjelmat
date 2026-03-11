@@ -1,6 +1,7 @@
 import sqlite3
 import db
 import config
+import programs
 from flask import Flask
 from flask import render_template, redirect, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -31,14 +32,9 @@ def create_program():
     level_id = level_result[0]["id"]
     type_id = type_result[0]["id"]
 
-    try:
-        sql = """INSERT INTO programs (title, content, user_id, level_id, type_id)
-                 VALUES (?, ?, ?, ?, ?)"""
-        db.execute(sql, [title, content, user_id, level_id, type_id])
-    except sqlite3.IntegrityError:
-        return "Tapahtui virhe"
+    programs.add_program(title, content, user_id, level_id, type_id)
     
-    return "Treeniohjelma luotu"
+    return redirect("/")
 
 @app.route("/register")
 def register():
