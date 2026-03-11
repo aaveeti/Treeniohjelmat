@@ -24,9 +24,12 @@
   {% endif %}
 
   <h2>Kaikki julkaistut treeniohjelmat</h2>
-  <p>
-
-  </p>
+  
+  <ul>
+    {% for program in programs %}
+    <li><a href="/program/{{ program.id }}">{{ program.title }}</a></li>
+    {% endfor %}
+  </ul>
 
 </body>
 

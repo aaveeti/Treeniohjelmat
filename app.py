@@ -11,7 +11,13 @@ app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    all_programs = programs.get_programs()
+    return render_template("index.html", programs=all_programs)
+
+@app.route("/program/<int:program_id>")
+def show_program(program_id):
+    program = programs.get_program(program_id)
+    return render_template("show_program.html", program=program)
 
 @app.route("/new_program")
 def new_program():
