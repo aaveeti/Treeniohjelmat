@@ -7,6 +7,11 @@
 
 <body>
   <h1>{{ program.title }}</h1>
+  {% if session.user_id == program.user_id %}
+  <p>
+    <a href="/edit_program/{{ program.id }}">Muokkaa treeniohjelmaa</a>
+  </p>
+  {% endif %}
   <p>
     {{ program.content }}
   </p>

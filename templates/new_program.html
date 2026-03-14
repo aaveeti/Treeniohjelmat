@@ -19,13 +19,13 @@
     <p>
       Kokemustaso: <br />
       {% for level in levels %}
-      <input type="radio" name="experience" value="{{ level }}" /> {{ level }}
+      <input type="radio" name="experience" value="{{ level.id }}" /> {{ level.title }}
       {% endfor %}
     </p>
     <p>
       Treeniohjelman tavoite: <br />
       {% for type in types %}
-      <input type="radio" name="workout_type" value="{{ type }}" /> {{ type }}
+      <input type="radio" name="workout_type" value="{{ type.id }}" /> {{ type.title }}
       {% endfor %}
     </p>
     <input type="submit" value="Julkaise ohjelma" />

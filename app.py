@@ -30,17 +30,32 @@ def create_program():
     user_id = session.get("user_id")
     title = request.form["title"]
     content = request.form["content"]
-    level_name = request.form["experience"]
-    level_result = db.query("SELECT id FROM levels WHERE title = ?", [level_name])
-    type_name = request.form["workout_type"]
-    type_result = db.query("SELECT id FROM workout_types WHERE title = ?", [type_name])
-
-    level_id = level_result[0]["id"]
-    type_id = type_result[0]["id"]
+    level_id = request.form["experience"]
+    type_id = request.form["workout_type"]
 
     programs.add_program(title, content, user_id, level_id, type_id)
     
     return redirect("/")
+
+@app.route("/edit_program/<int:program_id>")
+def edit_program(program_id):
+    levels_data = db.get_levels()
+    workout_type_data = db.get_workout_type()
+    program = programs.get_program(program_id)
+    return render_template("edit_program.html", levels=levels_data, types=workout_type_data, program=program)
+
+@app.route("/update_program", methods=["POST"])
+def update_program():
+    program_id = request.form["program_id"]
+    title = request.form["title"]
+    content = request.form["content"]
+
+    level_id = request.form["experience"]
+    type_id = request.form["workout_type"]
+
+    programs.update_program(program_id, title, content, level_id, type_id)
+    
+    return redirect("/program/" + str(program_id))
 
 @app.route("/register")
 def register():

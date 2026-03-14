@@ -25,14 +25,12 @@ def query(sql, params=[]):
 
 def get_levels():
     con = get_connection()
-    result = "SELECT title FROM levels;"
-    levels = con.execute(result).fetchall()
+    levels = con.execute("SELECT id, title FROM levels").fetchall()
     con.close()
-    return [level[0] for level in levels]
+    return levels
 
 def get_workout_type():
     con = get_connection()
-    result = "SELECT title FROM workout_types;"
-    types = con.execute(result).fetchall()
+    types = con.execute("SELECT id, title FROM workout_types").fetchall()
     con.close()
-    return [type[0] for type in types]
+    return types
