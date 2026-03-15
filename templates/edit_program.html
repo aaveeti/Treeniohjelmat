@@ -10,11 +10,11 @@
   <form action="/update_program" method="post">
     <p>
       Otsikko: <br />
-      <input type="text" name="title" value="{{ program.title }}"/>
+      <input type="text" name="title" value="{{ program.title }}" maxlength="100" required/>
     </p>
     <p>
       Kuvaus: <br />
-      <textarea name="content" rows="8" cols="60" >{{ program.content }}</textarea>
+      <textarea name="content" rows="8" cols="60" maxlength="1000" required>{{ program.content }}</textarea>
     </p>
     <p>
       Kokemustaso: <br />
@@ -31,7 +31,7 @@
       {% endfor %}
     </p>
     <input type="hidden" name="program_id" value="{{ program.id }}" />
-    <input type="submit" value="Päivitä ohjelma" />
+    <input type="submit" value="Päivitä" />
   </form>
 </body>
 

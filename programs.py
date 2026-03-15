@@ -37,3 +37,7 @@ def get_program(program_id):
     if result:
         return result[0]
     return None
+
+def delete_program(program_id):
+    sql = "DELETE FROM programs WHERE id = ?;"
+    db.execute(sql, [program_id])

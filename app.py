@@ -3,11 +3,15 @@ import db
 import config
 import programs
 from flask import Flask
-from flask import render_template, redirect, request, session
+from flask import render_template, redirect, request, session, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+def require_login():
+    if "user_id" not in session:
+        abort(403)
 
 @app.route("/")
 def index():
@@ -17,21 +21,32 @@ def index():
 @app.route("/program/<int:program_id>")
 def show_program(program_id):
     program = programs.get_program(program_id)
+    
+    if program is None:
+        return "Treeniohjelmaa ei löytynyt", 404
+    
     return render_template("show_program.html", program=program)
 
 @app.route("/new_program")
 def new_program():
+    require_login()
+
     levels_data = db.get_levels()
     workout_type_data = db.get_workout_type()
     return render_template("new_program.html", levels=levels_data, types=workout_type_data)
 
 @app.route("/create_program", methods=["POST"])
 def create_program():
+    require_login()
+    
     user_id = session.get("user_id")
     title = request.form["title"]
     content = request.form["content"]
     level_id = request.form["experience"]
     type_id = request.form["workout_type"]
+
+    if not title or len(title) > 100 or len(content) > 1000:
+        abort(403)
 
     programs.add_program(title, content, user_id, level_id, type_id)
     
@@ -39,9 +54,13 @@ def create_program():
 
 @app.route("/edit_program/<int:program_id>")
 def edit_program(program_id):
+    require_login()
+    
     levels_data = db.get_levels()
     workout_type_data = db.get_workout_type()
     program = programs.get_program(program_id)
+    if program["user_id"] != session["user_id"]:
+        abort(403)
     return render_template("edit_program.html", levels=levels_data, types=workout_type_data, program=program)
 
 @app.route("/update_program", methods=["POST"])
@@ -53,9 +72,29 @@ def update_program():
     level_id = request.form["experience"]
     type_id = request.form["workout_type"]
 
+    if not title or len(title) > 100 or len(content) > 1000:
+        abort(403)
+
     programs.update_program(program_id, title, content, level_id, type_id)
     
     return redirect("/program/" + str(program_id))
+
+@app.route("/delete_program/<int:program_id>", methods=["GET", "POST"])
+def delete_program(program_id):
+    require_login()
+    
+    if request.method == "GET":
+        program = programs.get_program(program_id)
+        if program["user_id"] != session["user_id"]:
+            abort(403)
+        return render_template("delete_program.html", program=program)
+
+    if request.method == "POST":
+        if "remove" in request.form:
+            programs.delete_program(program_id)
+            return redirect("/")
+        else:
+            return redirect("/program/" + str(program_id))
 
 @app.route("/register")
 def register():
@@ -102,5 +141,6 @@ def login():
 
 @app.route("/logout")
 def logout():
+    require_login()
     session.clear()
     return redirect("/")

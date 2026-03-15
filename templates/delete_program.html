@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Poista treeniohjelma</title>
+</head>
+
+<body>
+  <h1>Poista treeniohjelma</h1>
+  <p>Ohjelma: {{ program.title }}</p>
+  <p>Haluatko varmasti poistaa tämän ohjelman?</p>
+  <form action="/delete_program/{{ program.id }}" method="post">
+    <input type="submit" name="remove" value="Poista ohjelma">
+    <input type="submit" name="return" value="Palaa takaisin">
+  </form>
+</body>
+
+</html>
