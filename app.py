@@ -96,6 +96,16 @@ def delete_program(program_id):
         else:
             return redirect("/program/" + str(program_id))
 
+@app.route("/find_program")
+def find_program():
+    query = request.args.get("query")
+    if query:
+        results = programs.search(query)
+    else:
+        query = ""
+        results = []
+    return render_template("find_program.html", query=query, results=results)
+
 @app.route("/register")
 def register():
     return render_template("register.html")

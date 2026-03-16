@@ -41,3 +41,11 @@ def get_program(program_id):
 def delete_program(program_id):
     sql = "DELETE FROM programs WHERE id = ?;"
     db.execute(sql, [program_id])
+
+def search(query):
+    sql = """SELECT programs.id, programs.title
+             FROM programs
+             WHERE programs.title LIKE ? OR programs.content LIKE ?
+             ORDER BY id DESC;"""
+    like = "%" + query + "%"
+    return db.query(sql, [like, like])
