@@ -59,8 +59,12 @@ def edit_program(program_id):
     levels_data = db.get_levels()
     workout_type_data = db.get_workout_type()
     program = programs.get_program(program_id)
+    if not program:
+        abort(404)
+
     if program["user_id"] != session["user_id"]:
         abort(403)
+    
     return render_template("edit_program.html", levels=levels_data, types=workout_type_data, program=program)
 
 @app.route("/update_program", methods=["POST"])
@@ -72,6 +76,13 @@ def update_program():
     level_id = request.form["experience"]
     type_id = request.form["workout_type"]
 
+    program = programs.get_program(program_id)
+    if not program:
+        abort(404)
+
+    if program["user_id"] != session["user_id"]:
+        abort(403)
+
     if not title or len(title) > 100 or len(content) > 1000:
         abort(403)
 
@@ -82,11 +93,15 @@ def update_program():
 @app.route("/delete_program/<int:program_id>", methods=["GET", "POST"])
 def delete_program(program_id):
     require_login()
+    program = programs.get_program(program_id)
     
-    if request.method == "GET":
-        program = programs.get_program(program_id)
-        if program["user_id"] != session["user_id"]:
+    if not program:
+        abort(404)
+
+    if program["user_id"] != session["user_id"]:
             abort(403)
+
+    if request.method == "GET":
         return render_template("delete_program.html", program=program)
 
     if request.method == "POST":
