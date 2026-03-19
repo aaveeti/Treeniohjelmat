@@ -49,3 +49,12 @@ def search(query):
              ORDER BY id DESC;"""
     like = "%" + query + "%"
     return db.query(sql, [like, like])
+
+def get_categories(program_id):
+    sql = """SELECT L.title AS level, T.title AS type
+             FROM programs P
+             JOIN levels L ON P.level_id = L.id
+             JOIN workout_types T ON P.type_id = T.id
+             WHERE P.id = ?;"""
+    result = db.query(sql, [program_id])
+    return result[0] if result else None
