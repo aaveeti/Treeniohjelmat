@@ -5,7 +5,6 @@ import programs
 import users
 from flask import Flask
 from flask import render_template, redirect, request, session, abort
-from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -144,14 +143,12 @@ def create_user():
     password2 = request.form["password2"]
     if password1 != password2:
         return "VIRHE: salasanat eivät ole samat"
-    password_hash = generate_password_hash(password1)
-
+    
     try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
+        users.create_user(username, password1)
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
-
+    
     return "Tunnus luotu"
 
 @app.route("/login", methods=["GET", "POST"])
@@ -161,20 +158,16 @@ def login():
 
     username = request.form["username"]
     password = request.form["password"]
+    
+    user = users.check_login(username, password)
+    
+    if not user:
+        return "VIRHE: väärä tunnus tai salasana", 401
 
-    result = db.query("SELECT id, password_hash FROM users WHERE username = ?", [username])
+    session["username"] = user["username"]
+    session["user_id"] = user["id"]
     
-    if not result:
-        return "VIRHE: väärä tunnus tai salasana"
-    
-    user = result[0]
-    
-    if check_password_hash(user["password_hash"], password):
-        session["username"] = username
-        session["user_id"] = user["id"]
-        return redirect("/")
-    else:
-        return "VIRHE: väärä tunnus tai salasana"
+    return redirect("/")
 
 @app.route("/logout")
 def logout():
