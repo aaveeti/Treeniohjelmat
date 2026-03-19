@@ -2,6 +2,7 @@ import sqlite3
 import db
 import config
 import programs
+import users
 from flask import Flask
 from flask import render_template, redirect, request, session, abort
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -18,13 +19,20 @@ def index():
     all_programs = programs.get_programs()
     return render_template("index.html", programs=all_programs)
 
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    user = users.get_user(user_id)
+    programs = users.get_programs(user_id)
+    if not user:
+        abort(404)
+    return render_template("show_user.html", user=user, programs=programs)
+
+
 @app.route("/program/<int:program_id>")
 def show_program(program_id):
     program = programs.get_program(program_id)
-    
-    if program is None:
-        return "Treeniohjelmaa ei löytynyt", 404
-    
+    if not program:
+        abort(404)
     return render_template("show_program.html", program=program)
 
 @app.route("/new_program")
@@ -45,7 +53,9 @@ def create_program():
     level_id = request.form["experience"]
     type_id = request.form["workout_type"]
 
-    if not title or len(title) > 100 or len(content) > 1000:
+    if not title or len(title) > 50:
+        abort(403)
+    if not content or len(content) > 500:
         abort(403)
 
     programs.add_program(title, content, user_id, level_id, type_id)
@@ -83,7 +93,9 @@ def update_program():
     if program["user_id"] != session["user_id"]:
         abort(403)
 
-    if not title or len(title) > 100 or len(content) > 1000:
+    if not title or len(title) > 50:
+        abort(403)
+    if not content or len(content) > 500:
         abort(403)
 
     programs.update_program(program_id, title, content, level_id, type_id)

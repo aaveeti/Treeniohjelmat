@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Käyttäjä {{ user.username }}</title>
+</head>
+
+<body>
+  <h1>Käyttäjä {{ user.username }}</h1>
+  <p>
+    Käyttäjällä on yhteensä {{ programs | count }} julkaistua treeniohjelmaa
+  </p>
+  <h2>Treeniohjelmat</h2>
+  <ul>
+    {% for program in programs %}
+    <li><a href="/program/{{ program.id }}">{{ program.title }}</a></li>
+    {% endfor %}
+  </ul>
+  <p>
+    <a href="/">Takaisin</a>
+  </p>
+</body>
+
+</html>
