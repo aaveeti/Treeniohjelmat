@@ -58,3 +58,19 @@ def get_categories(program_id):
              WHERE P.id = ?;"""
     result = db.query(sql, [program_id])
     return result[0] if result else None
+
+def add_comment(user_id, comment, rating, program_id):
+    try:
+        sql = """INSERT INTO reviews (user_id, program_id, rating, comment)
+                 VALUES (?, ?, ?, ?);"""
+        db.execute(sql, [user_id, program_id, rating, comment])
+    except sqlite3.IntegrityError:
+        return "Tapahtui virhe"
+
+def get_comments(program_id):
+    sql = """SELECT u.id AS user_id, u.username, r.comment, r.rating 
+             FROM reviews r 
+             JOIN users u ON r.user_id = u.id 
+             WHERE r.program_id = ? 
+             ORDER BY r.id DESC;"""
+    return db.query(sql, [program_id])

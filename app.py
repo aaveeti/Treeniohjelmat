@@ -26,14 +26,15 @@ def show_user(user_id):
         abort(404)
     return render_template("show_user.html", user = user, programs = programs)
 
-
 @app.route("/program/<int:program_id>")
 def show_program(program_id):
     program = programs.get_program(program_id)
     categories = programs.get_categories(program_id)
+    all_comments = programs.get_comments(program_id)
+
     if not program:
         abort(404)
-    return render_template("show_program.html", program = program, level = categories["level"], workout_type = categories["type"])
+    return render_template("show_program.html", program = program, level = categories["level"], workout_type = categories["type"], comments = all_comments)
 
 @app.route("/new_program")
 def new_program():
@@ -61,6 +62,32 @@ def create_program():
     programs.add_program(title, content, user_id, level_id, type_id)
     
     return redirect("/")
+
+@app.route("/create_comment", methods=["POST"])
+def create_comment():
+    require_login()
+
+    try:
+        program_id = int(request.form["program_id"])
+        rating = int(request.form["rating"])
+    except (ValueError, KeyError):
+        abort(400)
+
+    program = programs.get_program(program_id)
+    if not program:
+        abort(403)
+
+    user_id = session.get("user_id")
+    comment = request.form["comment"]
+
+    if not comment or len(comment) > 300:
+        abort(400)
+    if not (1 <= rating <= 5):
+        abort(400)
+
+    programs.add_comment(user_id, comment, rating, program_id)
+
+    return redirect("/program/" + str(program_id))
 
 @app.route("/edit_program/<int:program_id>")
 def edit_program(program_id):
