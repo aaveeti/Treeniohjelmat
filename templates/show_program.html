@@ -44,6 +44,13 @@
       <ul>
         <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a><br>
         <li><strong>Arvosana: {{ comment.rating }}/5</strong> - {{ comment.comment }}</li>
+        {% if session.user_id == comment.user_id %}
+          <form action="/delete_comment" method="POST" style="display:inline;">
+          <input type="hidden" name="comment_id" value="{{ comment.id }}">
+          <input type="hidden" name="program_id" value="{{ program.id }}">
+          <input type="submit" value="Poista kommentti" onclick="return confirm('Haluatko varmasti poistaa kommentin?')">
+          </form>
+        {% endif %}
       </ul>
       {% else %}
       <p>Ei vielä kommentteja.</p>

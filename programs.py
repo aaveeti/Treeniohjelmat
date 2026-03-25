@@ -68,9 +68,31 @@ def add_comment(user_id, comment, rating, program_id):
         return "Tapahtui virhe"
 
 def get_comments(program_id):
-    sql = """SELECT u.id AS user_id, u.username, r.comment, r.rating 
+    sql = """SELECT r.id, u.id AS user_id, u.username, r.comment, r.rating 
              FROM reviews r 
              JOIN users u ON r.user_id = u.id 
              WHERE r.program_id = ? 
              ORDER BY r.id DESC;"""
     return db.query(sql, [program_id])
+
+def get_comment(comment_id):
+    sql = """SELECT r.id,
+                    r.user_id,
+                    r.program_id,
+                    r.rating,
+                    r.comment,
+                    p.id,
+                    u.id
+             FROM reviews r
+             JOIN programs p ON r.program_id = p.id
+             JOIN users u ON r.user_id = u.id 
+             WHERE r.id = ?;"""
+    result = db.query(sql, [comment_id])
+    return result[0] if result else None
+
+def delete_comment(comment_id, user_id):
+    try:
+        sql = "DELETE FROM reviews WHERE id = ? AND user_id = ?"
+        db.execute(sql, [comment_id, user_id])
+    except sqlite3.IntegrityError:
+        return "Tapahtui virhe"

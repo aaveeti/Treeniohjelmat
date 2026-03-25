@@ -7,26 +7,23 @@
 
 <body>
   <h1>Treeniohjelmat</h1>
-  {% if not session.username %}
-  <p>
-    <a href="\login">Kirjaudu sisään</a>
-    <a href="\register">Rekisteröidy</a>
-  </p>
-  <p>
-    <a href="\find_program">Etsi ohjelma</a>
-  </p>
-  {% endif %}
-  
+
   {% if session.username %}  
   <p>
-    Olet kirjautunut nimellä {{ session.username }}<br>
-    <a href="\logout">Kirjaudu ulos</a><br>
-    <br>
-    <a href="\new_program">Julkaise treeniohjelma</a><br>
-    <br>
-    <a href="\find_program">Etsi ohjelma</a>
+    Olet kirjautunut nimellä {{ session.username }}
   </p>
   {% endif %}
+
+  <p>
+    <a href="\find_program">Etsi ohjelma</a> |
+  {% if session.user_id %}
+    <a href="\new_program">Julkaise treeniohjelma</a> |
+    <a href="\logout">Kirjaudu ulos</a>
+  {% else %}
+    <a href="\login">Kirjaudu sisään</a> |
+    <a href="\register">Rekisteröidy</a>
+  {% endif %}
+  </p>
 
   <h2>Kaikki julkaistut treeniohjelmat</h2>
   

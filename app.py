@@ -89,6 +89,21 @@ def create_comment():
 
     return redirect("/program/" + str(program_id))
 
+@app.route("/delete_comment", methods=["POST"])
+def delete_comment():
+    require_login()
+
+    comment_id = request.form["comment_id"]
+    program_id = request.form["program_id"]
+    comment = programs.get_comment(comment_id)
+
+    if not comment or comment["user_id"] != session["user_id"]:
+        abort(403)
+
+    programs.delete_comment(comment_id, session["user_id"])
+    
+    return redirect("/program/" + str(program_id))
+
 @app.route("/edit_program/<int:program_id>")
 def edit_program(program_id):
     require_login()

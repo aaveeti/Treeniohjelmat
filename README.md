@@ -7,7 +7,7 @@
 - Käyttäjä pystyy etsimään treeniohjelmia hakusanalla. Käyttäjä pystyy hakemaan sekä itse lisäämiään että muiden käyttäjien lisäämiä treeniohjelmia.
 - Sovelluksessa on käyttäjäsivut, jotka näyttävät jokaisesta käyttäjästä tilastoja ja käyttäjän lisäämät treeniohjelmat.
 - Käyttäjä pystyy valitsemaan treeniohjelmalle kaksi luokittelua (kokemustaso, tavoite).
-- Käyttäjä pystyy antamaan treeniohjelmalle numeroarvion (1-5) ja kommentin.
+- Käyttäjä pystyy antamaan treeniohjelmalle numeroarvion (1-5) ja kommentin. Käyttäjä pystyy myös poistamaan antamansa kommentin.
 ## Miten sovellusta voi testata
 Asenna `flask` -kirjasto:
 ```bash
