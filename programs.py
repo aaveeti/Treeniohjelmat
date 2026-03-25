@@ -18,7 +18,17 @@ def update_program(program_id, title, content, level_id, type_id):
     db.execute(sql, [title, content, level_id, type_id, program_id])
 
 def get_programs():
-    sql = "SELECT id, title FROM programs ORDER BY id DESC;"
+    sql = """SELECT p.id, 
+                    p.title,
+                    p.created_at,
+                    l.title AS level,
+                    w.title AS type,
+                    u.username
+             FROM programs p
+             JOIN users u ON p.user_id = u.id
+             JOIN levels l ON p.level_id = l.id
+             JOIN workout_types w ON p.type_id = w.id
+             ORDER BY p.id DESC;"""
     return db.query(sql)
 
 def get_program(program_id):
@@ -27,6 +37,7 @@ def get_program(program_id):
                     programs.content,
                     programs.level_id,
                     programs.type_id,
+                    programs.created_at,
                     users.id AS user_id,
                     users.username
              FROM programs
@@ -43,10 +54,18 @@ def delete_program(program_id):
     db.execute(sql, [program_id])
 
 def search(query):
-    sql = """SELECT programs.id, programs.title
-             FROM programs
-             WHERE programs.title LIKE ? OR programs.content LIKE ?
-             ORDER BY id DESC;"""
+    sql = """SELECT p.id, 
+                    p.title, 
+                    p.created_at, 
+                    u.username,
+                    l.title AS level,
+                    w.title AS type
+             FROM programs p
+             JOIN users u ON p.user_id = u.id
+             JOIN levels l ON p.level_id = l.id
+             JOIN workout_types w ON p.type_id = w.id
+             WHERE p.title LIKE ? OR p.content LIKE ?
+             ORDER BY p.id DESC;"""
     like = "%" + query + "%"
     return db.query(sql, [like, like])
 

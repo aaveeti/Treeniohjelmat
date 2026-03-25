@@ -8,9 +8,13 @@
   Käyttäjällä on yhteensä {{ programs | count }} julkaistua treeniohjelmaa
 </p>
 <h2>Treeniohjelmat</h2>
-<ul>
-  {% for program in programs %}
-  <li><a href="/program/{{ program.id }}">{{ program.title }}</a></li>
-  {% endfor %}
-</ul>
+
+{% for program in programs %}
+<div class="program">
+<a href="/program/{{ program.id }}">{{ program.title }}</a><br>
+<strong>Taso:</strong> {{ program.level }} | <strong>Tavoite:</strong> {{ program.type }}<br>
+<strong>Julkaisuaika:</strong> {{ program.created_at }}
+</div>
+{% endfor %}
+
 {% endblock %}

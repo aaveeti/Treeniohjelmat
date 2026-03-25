@@ -5,9 +5,10 @@
 {% block content %}
 <h2>Julkaise treeniohjelma</h2>
 <form action="/create_program" method="post">
+  <div class="create">
   <p>
     Otsikko: <br />
-    <input type="text" name="title" maxlength="50" required/>
+    <input type="text" name="title" size="50" maxlength="50" required/>
   </p>
   <p>
     Kuvaus: <br />
@@ -26,5 +27,6 @@
     {% endfor %}
   </p>
   <input type="submit" value="Julkaise" />
+ </div>
 </form>
 {% endblock %}

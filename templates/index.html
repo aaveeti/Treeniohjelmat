@@ -4,10 +4,12 @@
 
 {% block content %}
 <h2>Kaikki julkaistut treeniohjelmat</h2>
-  
-<ul>
-  {% for program in programs %}
-  <li><a href="/program/{{ program.id }}">{{ program.title }}</a></li>
-  {% endfor %}
-</ul>
+
+{% for program in programs %}
+<div class="program">
+<a href="/program/{{ program.id }}">{{ program.title }}</a><br>
+<strong>Taso:</strong> {{ program.level }} | <strong>Tavoite:</strong> {{ program.type }}<br>
+<strong>Julkaisija:</strong> {{ program.username }} | <strong>Julkaisuaika:</strong> {{ program.created_at }}<br>
+</div>
+{% endfor %}
 {% endblock %}

@@ -3,6 +3,7 @@
 {% block title %}{{ program.title }}{% endblock%}
 
 {% block content %}
+<div class="program">
 <h2>{{ program.title }}</h2>
 {% if session.user_id == program.user_id %}
 <p>
@@ -11,18 +12,19 @@
 </p>
 {% endif %}
 <p>
+  <div class="content">
   {{ program.content }}
+  </div>
 </p>
+<h3>Kategoriat</h3>
 <p>
-  <strong>Kategoriat:</strong>
-  <ul>
-    <li><strong>Taso:</strong> {{ level }}</li>
-    <li><strong>Tavoite:</strong> {{ workout_type }}</li>
-  </ul>
+  <strong>Taso:</strong> {{ level }}<br>
+  <strong>Tavoite:</strong> {{ workout_type }}
 </p>
 <p>
   <strong>Julkaisija:</strong> <a href="/user/{{ program.user_id }}">{{ program.username }}</a>
 </p>
+</div>
   {% if session.username %}  
   <h2>Lisää kommentti:</h2>
   <form action="/create_comment" method="post">
@@ -34,17 +36,17 @@
   {% endif %}
   <h2>Kommentit</h2>
   {% for comment in comments %}
-    <ul>
-      <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a><br>
-      <li><strong>Arvosana: {{ comment.rating }}/5</strong> - {{ comment.comment }}</li>
-      {% if session.user_id == comment.user_id %}
-        <form action="/delete_comment" method="POST" style="display:inline;">
-        <input type="hidden" name="comment_id" value="{{ comment.id }}">
-        <input type="hidden" name="program_id" value="{{ program.id }}">
-        <input type="submit" value="Poista kommentti" onclick="return confirm('Haluatko varmasti poistaa kommentin?')">
-        </form>
-      {% endif %}
-    </ul>
+    <div class="comment">
+    <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a><br>
+    <strong>Arvosana: {{ comment.rating }}/5</strong> <div class="content">{{ comment.comment }}</div><br>
+    {% if session.user_id == comment.user_id %}
+      <form action="/delete_comment" method="POST" style="display:inline;">
+      <input type="hidden" name="comment_id" value="{{ comment.id }}">
+      <input type="hidden" name="program_id" value="{{ program.id }}">
+      <input type="submit" value="Poista kommentti" onclick="return confirm('Haluatko varmasti poistaa kommentin?')">
+      </form>
+    {% endif %}
+    </div>
     {% else %}
     <p>Ei vielä kommentteja.</p>
   {% endfor %}

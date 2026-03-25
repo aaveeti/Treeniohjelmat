@@ -28,8 +28,14 @@ def get_user(user_id):
     return result[0] if result else None
 
 def get_programs(user_id):
-    sql = """SELECT id, title
-             FROM programs
-             WHERE user_id = ?
-             ORDER BY id DESC;"""
+    sql = """SELECT p.id, 
+                    p.title, 
+                    p.created_at,
+                    l.title AS level,
+                    w.title AS type
+             FROM programs p
+             JOIN levels l ON p.level_id = l.id
+             JOIN workout_types w ON p.type_id = w.id
+             WHERE p.user_id = ?
+             ORDER BY p.id DESC;"""
     return db.query(sql, [user_id])
