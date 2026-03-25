@@ -1,35 +1,30 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Julkaise treeniohjelma</title>
-</head>
+{% block title %}Julkaise treeniohjelma{% endblock%}
 
-<body>
-  <h1>Julkaise treeniohjelma</h1>
-  <form action="/create_program" method="post">
-    <p>
-      Otsikko: <br />
-      <input type="text" name="title" maxlength="50" required/>
-    </p>
-    <p>
-      Kuvaus: <br />
-      <textarea name="content" rows="8" cols="60" maxlength="500" required></textarea>
-    </p>
-    <p>
-      Kokemustaso: <br />
-      {% for level in levels %}
-      <input type="radio" name="experience" value="{{ level.id }}" required/> {{ level.title }}
-      {% endfor %}
-    </p>
-    <p>
-      Treeniohjelman tavoite: <br />
-      {% for type in types %}
-      <input type="radio" name="workout_type" value="{{ type.id }}" required/> {{ type.title }}
-      {% endfor %}
-    </p>
-    <input type="submit" value="Julkaise" />
-  </form>
-</body>
-
-</html>
+{% block content %}
+<h2>Julkaise treeniohjelma</h2>
+<form action="/create_program" method="post">
+  <p>
+    Otsikko: <br />
+    <input type="text" name="title" maxlength="50" required/>
+  </p>
+  <p>
+    Kuvaus: <br />
+    <textarea name="content" rows="8" cols="60" maxlength="500" required></textarea>
+  </p>
+  <p>
+    Kokemustaso: <br />
+    {% for level in levels %}
+    <input type="radio" name="experience" value="{{ level.id }}" required/> {{ level.title }}
+    {% endfor %}
+  </p>
+  <p>
+    Treeniohjelman tavoite: <br />
+    {% for type in types %}
+    <input type="radio" name="workout_type" value="{{ type.id }}" required/> {{ type.title }}
+    {% endfor %}
+  </p>
+  <input type="submit" value="Julkaise" />
+</form>
+{% endblock %}

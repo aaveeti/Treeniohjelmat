@@ -1,34 +1,24 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Etsi ohjelma</title>
-</head>
+{% block title %}Etsi ohjelma{% endblock%}
 
-<body>
-  <h1>Etsi ohjelma</h1>
+{% block content %}
+<h2>Etsi ohjelma</h2>
 
-  <form action="find_program" method="get">
-    <p>
-      Hakusana: <input type="text" name="query" value="{{ query }}">
-    </p>
-    <input type="submit" value="Etsi">
-  </form>
-
+<form action="find_program" method="get">
   <p>
-    <a href="/">Takaisin</a>
+    Hakusana: <input type="text" name="query" value="{{ query }}"> |
+  <input type="submit" value="Etsi">
   </p>
+</form>
 
-  {% if query %}
-  <h2>Tulokset</h2>
+{% if query %}
+<h2>Tulokset</h2>
 
-  <ul>
-    {% for program in results %}
-    <li><a href="/program/{{ program.id }}">{{ program.title }}</a></li>
-    {% endfor %}
-  </ul>
-  {% endif %}
-
-</body>
-
-</html>
+<ul>
+  {% for program in results %}
+  <li><a href="/program/{{ program.id }}">{{ program.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

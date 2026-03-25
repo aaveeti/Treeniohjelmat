@@ -1,38 +1,33 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Muokkaa treeniohjelmaa</title>
-</head>
+{% block title %}Muokkaa treeniohjelmaa{% endblock%}
 
-<body>
-  <h1>Muokkaa treeniohjelmaa</h1>
-  <form action="/update_program" method="post">
-    <p>
-      Otsikko: <br />
-      <input type="text" name="title" value="{{ program.title }}" maxlength="50" required/>
-    </p>
-    <p>
-      Kuvaus: <br />
-      <textarea name="content" rows="8" cols="60" maxlength="500" required>{{ program.content }}</textarea>
-    </p>
-    <p>
-      Kokemustaso: <br />
-      {% for level in levels %}
-      <input type="radio" name="experience" value="{{ level.id }}"
-        {% if level.id == program.level_id %} checked {% endif %} required/> {{ level.title }}
-      {% endfor %}
-    </p>
-    <p>
-      Treeniohjelman tavoite: <br />
-      {% for type in types %}
-      <input type="radio" name="workout_type" value="{{ type.id }}"
-        {% if type.id == program.type_id %} checked {% endif %} required/> {{ type.title }}
-      {% endfor %}
-    </p>
-    <input type="hidden" name="program_id" value="{{ program.id }}" />
-    <input type="submit" value="Päivitä" />
-  </form>
-</body>
-
-</html>
+{% block content %}
+<h2>Muokkaa treeniohjelmaa</h2>
+<form action="/update_program" method="post">
+  <p>
+    Otsikko: <br />
+    <input type="text" name="title" value="{{ program.title }}" maxlength="50" required/>
+  </p>
+  <p>
+    Kuvaus: <br />
+    <textarea name="content" rows="8" cols="60" maxlength="500" required>{{ program.content }}</textarea>
+  </p>
+  <p>
+    Kokemustaso: <br />
+    {% for level in levels %}
+    <input type="radio" name="experience" value="{{ level.id }}"
+      {% if level.id == program.level_id %} checked {% endif %} required/> {{ level.title }}
+    {% endfor %}
+  </p>
+  <p>
+    Treeniohjelman tavoite: <br />
+    {% for type in types %}
+    <input type="radio" name="workout_type" value="{{ type.id }}"
+      {% if type.id == program.type_id %} checked {% endif %} required/> {{ type.title }}
+    {% endfor %}
+  </p>
+  <input type="hidden" name="program_id" value="{{ program.id }}" />
+  <input type="submit" value="Päivitä" />
+</form>
+{% endblock %}

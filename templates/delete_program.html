@@ -1,18 +1,13 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Poista treeniohjelma</title>
-</head>
+{% block title %}Poista treeniohjelma{% endblock%}
 
-<body>
-  <h1>Poista treeniohjelma</h1>
-  <p>Ohjelma: {{ program.title }}</p>
-  <p>Haluatko varmasti poistaa tämän ohjelman?</p>
-  <form action="/delete_program/{{ program.id }}" method="post">
-    <input type="submit" name="remove" value="Poista ohjelma">
-    <input type="submit" name="return" value="Palaa takaisin">
-  </form>
-</body>
-
-</html>
+{% block content %}
+<h2>Poista treeniohjelma</h2>
+<p>Ohjelma: {{ program.title }}</p>
+<p>Haluatko varmasti poistaa tämän ohjelman?</p>
+<form action="/delete_program/{{ program.id }}" method="post">
+  <input type="submit" name="remove" value="Poista ohjelma">
+  <input type="submit" name="return" value="Palaa takaisin">
+</form>
+{% endblock %}

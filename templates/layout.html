@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{% block title %}{% endblock%}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  <h1>Treeniohjelmat</h1>
+
+  {% if session.username %}  
+  <p>
+    Olet kirjautunut nimellä {{ session.username }}
+  </p>
+  {% endif %}
+
+  <p>
+    <a href="\">Etusivu</a> |
+    <a href="\find_program">Etsi ohjelma</a> |
+  {% if session.user_id %}
+    <a href="\new_program">Julkaise treeniohjelma</a> |
+    <a href="\user\{{ session.user_id }}">Käyttäjäsivu</a> |
+    <a href="\logout">Kirjaudu ulos</a>
+  {% else %}
+    <a href="\login">Kirjaudu sisään</a> |
+    <a href="\register">Rekisteröidy</a>
+  {% endif %}
+  </p>
+
+  {% block content %}{% endblock %}
+  
+</body>
+
+</html>

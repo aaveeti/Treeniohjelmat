@@ -1,60 +1,51 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>{{ program.title }}</title>
-</head>
+{% block title %}{{ program.title }}{% endblock%}
 
-<body>
-  <h1>{{ program.title }}</h1>
-  {% if session.user_id == program.user_id %}
-  <p>
-    <a href="/edit_program/{{ program.id }}">Muokkaa</a>
-    <a href="/delete_program/{{ program.id }}">Poista</a>
-  </p>
+{% block content %}
+<h2>{{ program.title }}</h2>
+{% if session.user_id == program.user_id %}
+<p>
+  <a href="/edit_program/{{ program.id }}">Muokkaa</a>
+  <a href="/delete_program/{{ program.id }}">Poista</a>
+</p>
+{% endif %}
+<p>
+  {{ program.content }}
+</p>
+<p>
+  <strong>Kategoriat:</strong>
+  <ul>
+    <li><strong>Taso:</strong> {{ level }}</li>
+    <li><strong>Tavoite:</strong> {{ workout_type }}</li>
+  </ul>
+</p>
+<p>
+  <strong>Julkaisija:</strong> <a href="/user/{{ program.user_id }}">{{ program.username }}</a>
+</p>
+  {% if session.username %}  
+  <h2>Lisää kommentti:</h2>
+  <form action="/create_comment" method="post">
+    <input type="hidden" name="program_id" value="{{ program.id }}">
+    <textarea name="comment" rows="5" cols="50" maxlength="300" required></textarea><br>
+    <input type="number" name="rating" min="1" max="5" step="1" required/>Arvioi ohjelma (1-5)<br>
+    <input type="submit" value="Lähetä"/>
+  </form>
   {% endif %}
-  <p>
-    {{ program.content }}
-  </p>
-  <p>
-    <strong>Kategoriat:</strong>
+  <h2>Kommentit</h2>
+  {% for comment in comments %}
     <ul>
-      <li><strong>Taso:</strong> {{ level }}</li>
-      <li><strong>Tavoite:</strong> {{ workout_type }}</li>
+      <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a><br>
+      <li><strong>Arvosana: {{ comment.rating }}/5</strong> - {{ comment.comment }}</li>
+      {% if session.user_id == comment.user_id %}
+        <form action="/delete_comment" method="POST" style="display:inline;">
+        <input type="hidden" name="comment_id" value="{{ comment.id }}">
+        <input type="hidden" name="program_id" value="{{ program.id }}">
+        <input type="submit" value="Poista kommentti" onclick="return confirm('Haluatko varmasti poistaa kommentin?')">
+        </form>
+      {% endif %}
     </ul>
-  </p>
-  <p>
-    <strong>Julkaisija:</strong> <a href="/user/{{ program.user_id }}">{{ program.username }}</a>
-  <p>
-    <a href="/">Takaisin</a>
-  </p>
-  </p>
-    {% if session.username %}  
-    <h2>Lisää kommentti:</h2>
-    <form action="/create_comment" method="post">
-      <input type="hidden" name="program_id" value="{{ program.id }}">
-
-      <textarea name="comment" rows="5" cols="50" maxlength="300" required></textarea><br>
-      <input type="number" name="rating" min="1" max="5" step="1" required/>Arvioi ohjelma (1-5)<br>
-      <input type="submit" value="Lähetä"/>
-    </form>
-    {% endif %}
-    <h2>Kommentit</h2>
-    {% for comment in comments %}
-      <ul>
-        <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a><br>
-        <li><strong>Arvosana: {{ comment.rating }}/5</strong> - {{ comment.comment }}</li>
-        {% if session.user_id == comment.user_id %}
-          <form action="/delete_comment" method="POST" style="display:inline;">
-          <input type="hidden" name="comment_id" value="{{ comment.id }}">
-          <input type="hidden" name="program_id" value="{{ program.id }}">
-          <input type="submit" value="Poista kommentti" onclick="return confirm('Haluatko varmasti poistaa kommentin?')">
-          </form>
-        {% endif %}
-      </ul>
-      {% else %}
-      <p>Ei vielä kommentteja.</p>
-    {% endfor %}
-  </body>
-
-</html>
+    {% else %}
+    <p>Ei vielä kommentteja.</p>
+  {% endfor %}
+{% endblock %}
