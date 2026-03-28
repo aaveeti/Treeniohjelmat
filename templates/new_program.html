@@ -26,6 +26,7 @@
     <input type="radio" name="workout_type" value="{{ type.id }}" required/> {{ type.title }}
     {% endfor %}
   </p>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" value="Julkaise" />
  </div>
 </form>

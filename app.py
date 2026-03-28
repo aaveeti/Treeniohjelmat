@@ -1,5 +1,6 @@
 import sqlite3
 import db
+import secrets
 import config
 import programs
 import users
@@ -11,6 +12,12 @@ app.secret_key = config.secret_key
 
 def require_login():
     if "user_id" not in session:
+        abort(403)
+
+def check_csrf():
+    if "csrf_token" not in request.form:
+        abort(403)
+    if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
 
 @app.route("/")
@@ -47,6 +54,7 @@ def new_program():
 @app.route("/create_program", methods=["POST"])
 def create_program():
     require_login()
+    check_csrf()
     
     user_id = session.get("user_id")
     title = request.form["title"]
@@ -66,6 +74,7 @@ def create_program():
 @app.route("/create_comment", methods=["POST"])
 def create_comment():
     require_login()
+    check_csrf()
 
     try:
         program_id = int(request.form["program_id"])
@@ -92,6 +101,7 @@ def create_comment():
 @app.route("/delete_comment", methods=["POST"])
 def delete_comment():
     require_login()
+    check_csrf()
 
     comment_id = request.form["comment_id"]
     program_id = request.form["program_id"]
@@ -121,6 +131,8 @@ def edit_program(program_id):
 
 @app.route("/update_program", methods=["POST"])
 def update_program():
+    require_login()
+    check_csrf()
     program_id = request.form["program_id"]
     title = request.form["title"]
     content = request.form["content"]
@@ -147,6 +159,7 @@ def update_program():
 @app.route("/delete_program/<int:program_id>", methods=["GET", "POST"])
 def delete_program(program_id):
     require_login()
+    check_csrf()
     program = programs.get_program(program_id)
     
     if not program:
@@ -213,6 +226,7 @@ def login():
 
     session["username"] = user["username"]
     session["user_id"] = user["id"]
+    session["csrf_token"] = secrets.token_hex(16)
     
     return redirect("/")
 

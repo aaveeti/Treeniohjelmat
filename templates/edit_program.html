@@ -29,6 +29,7 @@
     {% endfor %}
   </p>
   <input type="hidden" name="program_id" value="{{ program.id }}" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" value="Päivitä" />
   </div>
 </form>

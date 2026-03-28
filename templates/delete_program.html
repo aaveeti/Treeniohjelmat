@@ -7,6 +7,7 @@
 <p>Ohjelma: {{ program.title }}</p>
 <p>Haluatko varmasti poistaa tämän ohjelman?</p>
 <form action="/delete_program/{{ program.id }}" method="post">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" name="remove" value="Poista ohjelma">
   <input type="submit" name="return" value="Palaa takaisin">
 </form>
