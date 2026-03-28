@@ -37,5 +37,5 @@ CREATE TABLE reviews (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (program_id) REFERENCES programs(id)
+    FOREIGN KEY (program_id) REFERENCES programs(id) ON DELETE CASCADE
 );
