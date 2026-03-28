@@ -7,23 +7,23 @@
 <form action="/create_program" method="post">
   <div class="create">
   <p>
-    Otsikko: <br />
-    <input type="text" name="title" size="50" maxlength="50" required/>
+    <label for="title">Otsikko:</label> <br />
+    <input type="text" name="title" id="title" size="50" maxlength="50" required/>
   </p>
   <p>
-    Kuvaus: <br />
-    <textarea name="content" rows="8" cols="60" maxlength="500" required></textarea>
+    <label for="content">Kuvaus:</label> <br />
+    <textarea name="content" id="content" rows="8" cols="60" maxlength="500" required></textarea>
   </p>
   <p>
-    Kokemustaso: <br />
+    <label for="experience">Kokemustaso:</label> <br />
     {% for level in levels %}
-    <input type="radio" name="experience" value="{{ level.id }}" required/> {{ level.title }}
+    <input type="radio" name="experience" id="experience" value="{{ level.id }}" required/> {{ level.title }}
     {% endfor %}
   </p>
   <p>
-    Treeniohjelman tavoite: <br />
+    <label for="workout_type">Treeniohjelman tavoite:</label> <br />
     {% for type in types %}
-    <input type="radio" name="workout_type" value="{{ type.id }}" required/> {{ type.title }}
+    <input type="radio" name="workout_type" id="workout_type" value="{{ type.id }}" required/> {{ type.title }}
     {% endfor %}
   </p>
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />

@@ -1,6 +1,7 @@
 import sqlite3
 import db
 import secrets
+import markupsafe
 import config
 import programs
 import users
@@ -19,6 +20,12 @@ def check_csrf():
         abort(403)
     if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br>")
+    return markupsafe.Markup(content)
 
 @app.route("/")
 def index():
@@ -41,7 +48,8 @@ def show_program(program_id):
 
     if not program:
         abort(404)
-    return render_template("show_program.html", program = program, level = categories["level"], workout_type = categories["type"], comments = all_comments)
+    return render_template("show_program.html", program = program, level = categories["level"],
+                            workout_type = categories["type"], comments = all_comments)
 
 @app.route("/new_program")
 def new_program():
@@ -159,7 +167,6 @@ def update_program():
 @app.route("/delete_program/<int:program_id>", methods=["GET", "POST"])
 def delete_program(program_id):
     require_login()
-    check_csrf()
     program = programs.get_program(program_id)
     
     if not program:
@@ -172,6 +179,7 @@ def delete_program(program_id):
         return render_template("delete_program.html", program = program)
 
     if request.method == "POST":
+        check_csrf()
         if "remove" in request.form:
             programs.delete_program(program_id)
             return redirect("/")

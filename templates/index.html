@@ -11,5 +11,7 @@
 <strong>Taso:</strong> {{ program.level }} | <strong>Tavoite:</strong> {{ program.type }}<br>
 <strong>Julkaisija:</strong> {{ program.username }} | <strong>Julkaisuaika:</strong> {{ program.created_at }}<br>
 </div>
+{% else %}
+    <p>Ei vielä julkaistuja ohjelmia</p>
 {% endfor %}
 {% endblock %}
