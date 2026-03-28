@@ -4,7 +4,7 @@ import config
 import programs
 import users
 from flask import Flask
-from flask import render_template, redirect, request, session, abort
+from flask import render_template, redirect, request, session, abort, flash
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -185,14 +185,17 @@ def create_user():
     password1 = request.form["password1"]
     password2 = request.form["password2"]
     if password1 != password2:
-        return "VIRHE: salasanat eivät ole samat"
+        flash("VIRHE: salasanat eivät ole samat")
+        return render_template("register.html"), 400
     
     try:
         users.create_user(username, password1)
     except sqlite3.IntegrityError:
-        return "VIRHE: tunnus on jo varattu"
+        flash("VIRHE: tunnus on jo varattu")
+        return render_template("register.html"), 409
     
-    return "Tunnus luotu"
+    flash("Tunnus luotu onnistuneesti!")
+    return redirect("/login")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -205,7 +208,8 @@ def login():
     user = users.check_login(username, password)
     
     if not user:
-        return "VIRHE: väärä tunnus tai salasana", 401
+        flash("VIRHE: väärä tunnus tai salasana")
+        return render_template("login.html"), 401
 
     session["username"] = user["username"]
     session["user_id"] = user["id"]
