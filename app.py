@@ -30,7 +30,7 @@ def show_lines(content):
 @app.route("/")
 def index():
     all_programs = programs.get_programs()
-    return render_template("index.html", programs = all_programs)
+    return render_template("index.html", programs=all_programs)
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
@@ -38,7 +38,7 @@ def show_user(user_id):
     programs = users.get_programs(user_id)
     if not user:
         abort(404)
-    return render_template("show_user.html", user = user, programs = programs)
+    return render_template("show_user.html", user=user, programs=programs)
 
 @app.route("/program/<int:program_id>")
 def show_program(program_id):
@@ -48,8 +48,8 @@ def show_program(program_id):
 
     if not program:
         abort(404)
-    return render_template("show_program.html", program = program, level = categories["level"],
-                            workout_type = categories["type"], comments = all_comments)
+    return render_template("show_program.html", program=program, level=categories["level"],
+                            workout_type=categories["type"], comments=all_comments)
 
 @app.route("/new_program")
 def new_program():
@@ -57,7 +57,7 @@ def new_program():
 
     levels_data = db.get_levels()
     workout_type_data = db.get_workout_type()
-    return render_template("new_program.html", levels = levels_data, types = workout_type_data)
+    return render_template("new_program.html", levels=levels_data, types=workout_type_data)
 
 @app.route("/create_program", methods=["POST"])
 def create_program():
@@ -135,7 +135,8 @@ def edit_program(program_id):
     if program["user_id"] != session["user_id"]:
         abort(403)
     
-    return render_template("edit_program.html", levels = levels_data, types = workout_type_data, program = program)
+    return render_template("edit_program.html", levels=levels_data, 
+                           types=workout_type_data, program=program)
 
 @app.route("/update_program", methods=["POST"])
 def update_program():
@@ -176,7 +177,7 @@ def delete_program(program_id):
             abort(403)
 
     if request.method == "GET":
-        return render_template("delete_program.html", program = program)
+        return render_template("delete_program.html", program=program)
 
     if request.method == "POST":
         check_csrf()
@@ -194,7 +195,7 @@ def find_program():
     else:
         query = ""
         results = []
-    return render_template("find_program.html", query = query, results = results)
+    return render_template("find_program.html", query=query, results=results)
 
 @app.route("/register")
 def register():
