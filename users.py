@@ -27,9 +27,9 @@ def get_user(user_id):
     result = db.query(sql, [user_id])
     return result[0] if result else None
 
-def get_programs(user_id):
+def get_programs(user_id, page=None, page_size=None):
     sql = """SELECT p.id,
-                    p.title, 
+                    p.title,
                     p.created_at,
                     l.title AS level,
                     w.title AS type
@@ -37,5 +37,15 @@ def get_programs(user_id):
              JOIN levels l ON p.level_id = l.id
              JOIN workout_types w ON p.type_id = w.id
              WHERE p.user_id = ?
-             ORDER BY p.id DESC;"""
-    return db.query(sql, [user_id])
+             ORDER BY p.id DESC"""
+
+    params = [user_id]
+
+    if page is not None and page_size is not None:
+        sql += " LIMIT ? OFFSET ?;"
+        params.append(page_size)
+        params.append(page_size * (page - 1))
+    else:
+        sql += ";"
+
+    return db.query(sql, params)

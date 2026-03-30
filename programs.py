@@ -61,22 +61,6 @@ def user_program_count(user_id):
     result = db.query(sql, [user_id])
     return result[0][0] if result else 0
 
-def get_user_programs(user_id, page, page_size):
-    sql = """SELECT p.id,
-                    p.title,
-                    p.created_at,
-                    l.title AS level,
-                    w.title AS type
-             FROM programs p
-             JOIN levels l ON p.level_id = l.id
-             JOIN workout_types w ON p.type_id = w.id
-             WHERE p.user_id = ?
-             ORDER BY p.id DESC
-             LIMIT ? OFFSET ?;"""
-    limit = page_size
-    offset = page_size * (page - 1)
-    return db.query(sql, [user_id, limit, offset])
-
 def delete_program(program_id):
     sql = "DELETE FROM programs WHERE id = ?;"
     db.execute(sql, [program_id])

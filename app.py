@@ -1,7 +1,7 @@
 import sqlite3
 import secrets
-import markupsafe
 import math
+import markupsafe
 
 from flask import Flask
 from flask import render_template, redirect, request, session, abort, flash
@@ -63,7 +63,7 @@ def show_user(user_id, page=1):
     if page > page_count:
         return redirect(f"/user/{user_id}/{page_count}")
 
-    user_programs = programs.get_user_programs(user_id, page, page_size)
+    user_programs = users.get_programs(user_id, page=page, page_size=page_size)
 
     return render_template("show_user.html", user=user, programs=user_programs,
                            program_count=program_count, page=page, page_count=page_count)
@@ -212,7 +212,7 @@ def delete_program(program_id):
         if "remove" in request.form:
             programs.delete_program(program_id)
             return redirect("/")
-        
+
         return redirect("/program/" + str(program_id))
 
 @app.route("/find_program")
