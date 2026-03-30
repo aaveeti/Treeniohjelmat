@@ -29,6 +29,7 @@ Testasin sovellusta suurella tietomäärällä. Ensiksi loin tietokantaan seed.p
 - 1000 käyttäjää
 - 100 000 treeniohjelmaa
 - 1 000 000 arviota
+
 Olin luonut sivutuksen jo ohjelman etusivulle, joten testidata ei vaikuttanut etusivun toimintaan huomattavasti.
 
 Hakusivulla en ollut vielä tehnyt sivutusta, jonka vuoksi hakusanalla "program" (joka hakee kaikki 100 000 treeniohjelmaa) haku kesti noin 2-3 sekunttia.
