@@ -18,7 +18,7 @@ def update_program(program_id, title, content, level_id, type_id):
     db.execute(sql, [title, content, level_id, type_id, program_id])
 
 def get_programs():
-    sql = """SELECT p.id, 
+    sql = """SELECT p.id,
                     p.title,
                     p.created_at,
                     l.title AS level,
@@ -54,7 +54,7 @@ def delete_program(program_id):
     db.execute(sql, [program_id])
 
 def search(query):
-    sql = """SELECT p.id, 
+    sql = """SELECT p.id,
                     p.title, 
                     p.created_at, 
                     u.username,
@@ -87,7 +87,7 @@ def add_comment(user_id, comment, rating, program_id):
         return "Tapahtui virhe"
 
 def get_comments(program_id):
-    sql = """SELECT r.id, u.id AS user_id, u.username, r.comment, r.rating 
+    sql = """SELECT r.id, u.id AS user_id, u.username, r.comment, r.rating
              FROM reviews r 
              JOIN users u ON r.user_id = u.id 
              WHERE r.program_id = ? 

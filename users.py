@@ -1,5 +1,5 @@
-import db
 from werkzeug.security import generate_password_hash, check_password_hash
+import db
 
 def create_user(username, password):
     password_hash = generate_password_hash(password)
@@ -9,15 +9,15 @@ def create_user(username, password):
 def check_login(username, password):
     sql = "SELECT id, username, password_hash FROM users WHERE username = ?"
     result = db.query(sql, [username])
-    
+
     if not result:
         return None
-    
+
     user = result[0]
 
     if check_password_hash(user["password_hash"], password):
         return user
-    
+
     return None
 
 def get_user(user_id):
@@ -28,7 +28,7 @@ def get_user(user_id):
     return result[0] if result else None
 
 def get_programs(user_id):
-    sql = """SELECT p.id, 
+    sql = """SELECT p.id,
                     p.title, 
                     p.created_at,
                     l.title AS level,

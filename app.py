@@ -1,12 +1,14 @@
 import sqlite3
-import db
 import secrets
 import markupsafe
+
+from flask import Flask
+from flask import render_template, redirect, request, session, abort, flash
+
+import db
 import config
 import programs
 import users
-from flask import Flask
-from flask import render_template, redirect, request, session, abort, flash
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -63,7 +65,7 @@ def new_program():
 def create_program():
     require_login()
     check_csrf()
-    
+
     user_id = session.get("user_id")
     title = request.form["title"]
     content = request.form["content"]
@@ -76,7 +78,7 @@ def create_program():
         abort(403)
 
     programs.add_program(title, content, user_id, level_id, type_id)
-    
+
     return redirect("/")
 
 @app.route("/create_comment", methods=["POST"])
@@ -99,7 +101,7 @@ def create_comment():
 
     if not comment or len(comment) > 300:
         abort(400)
-    if not (1 <= rating <= 5):
+    if not 1 <= rating <= 5:
         abort(400)
 
     programs.add_comment(user_id, comment, rating, program_id)
@@ -119,13 +121,13 @@ def delete_comment():
         abort(403)
 
     programs.delete_comment(comment_id, session["user_id"])
-    
+
     return redirect("/program/" + str(program_id))
 
 @app.route("/edit_program/<int:program_id>")
 def edit_program(program_id):
     require_login()
-    
+
     levels_data = db.get_levels()
     workout_type_data = db.get_workout_type()
     program = programs.get_program(program_id)
@@ -134,9 +136,9 @@ def edit_program(program_id):
 
     if program["user_id"] != session["user_id"]:
         abort(403)
-    
-    return render_template("edit_program.html", levels=levels_data, 
-                           types=workout_type_data, program=program)
+
+    return render_template("edit_program.html", levels=levels_data,
+                            types=workout_type_data, program=program)
 
 @app.route("/update_program", methods=["POST"])
 def update_program():
@@ -162,19 +164,19 @@ def update_program():
         abort(403)
 
     programs.update_program(program_id, title, content, level_id, type_id)
-    
+
     return redirect("/program/" + str(program_id))
 
 @app.route("/delete_program/<int:program_id>", methods=["GET", "POST"])
 def delete_program(program_id):
     require_login()
     program = programs.get_program(program_id)
-    
+
     if not program:
         abort(404)
 
     if program["user_id"] != session["user_id"]:
-            abort(403)
+        abort(403)
 
     if request.method == "GET":
         return render_template("delete_program.html", program=program)
@@ -184,8 +186,8 @@ def delete_program(program_id):
         if "remove" in request.form:
             programs.delete_program(program_id)
             return redirect("/")
-        else:
-            return redirect("/program/" + str(program_id))
+        
+        return redirect("/program/" + str(program_id))
 
 @app.route("/find_program")
 def find_program():
@@ -209,13 +211,13 @@ def create_user():
     if password1 != password2:
         flash("VIRHE: salasanat eivät ole samat")
         return render_template("register.html"), 400
-    
+
     try:
         users.create_user(username, password1)
     except sqlite3.IntegrityError:
         flash("VIRHE: tunnus on jo varattu")
         return render_template("register.html"), 409
-    
+
     flash("Tunnus luotu onnistuneesti!")
     return redirect("/login")
 
@@ -228,7 +230,7 @@ def login():
     password = request.form["password"]
 
     user = users.check_login(username, password)
-    
+
     if not user:
         flash("VIRHE: väärä tunnus tai salasana")
         return render_template("login.html"), 401
@@ -236,7 +238,7 @@ def login():
     session["username"] = user["username"]
     session["user_id"] = user["id"]
     session["csrf_token"] = secrets.token_hex(16)
-    
+
     return redirect("/")
 
 @app.route("/logout")
