@@ -39,3 +39,9 @@ CREATE TABLE reviews (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (program_id) REFERENCES programs(id) ON DELETE CASCADE
 );
+
+CREATE INDEX idx_programs_user_id ON programs(user_id);
+CREATE INDEX idx_programs_level_id ON programs(level_id);
+CREATE INDEX idx_programs_type_id ON programs(type_id);
+CREATE INDEX idx_reviews_program_id ON reviews(program_id);
+CREATE INDEX idx_reviews_user_id ON reviews(user_id);

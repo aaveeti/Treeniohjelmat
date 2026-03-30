@@ -1,6 +1,7 @@
 import sqlite3
 import secrets
 import markupsafe
+import math
 
 from flask import Flask
 from flask import render_template, redirect, request, session, abort, flash
@@ -30,17 +31,42 @@ def show_lines(content):
     return markupsafe.Markup(content)
 
 @app.route("/")
-def index():
-    all_programs = programs.get_programs()
-    return render_template("index.html", programs=all_programs)
+@app.route("/<int:page>")
+def index(page=1):
+    page_size = 10
+    program_count = programs.program_count()
+    page_count = math.ceil(program_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count))
+
+    all_programs = programs.get_programs(page, page_size)
+    return render_template("index.html", programs=all_programs, page=page, page_count=page_count)
 
 @app.route("/user/<int:user_id>")
-def show_user(user_id):
+@app.route("/user/<int:user_id>/<int:page>")
+def show_user(user_id, page=1):
     user = users.get_user(user_id)
-    programs = users.get_programs(user_id)
     if not user:
         abort(404)
-    return render_template("show_user.html", user=user, programs=programs)
+
+    page_size = 10
+    program_count = programs.user_program_count(user_id)
+    page_count = math.ceil(program_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect(f"/user/{user_id}/1")
+    if page > page_count:
+        return redirect(f"/user/{user_id}/{page_count}")
+
+    user_programs = programs.get_user_programs(user_id, page, page_size)
+
+    return render_template("show_user.html", user=user, programs=user_programs,
+                           program_count=program_count, page=page, page_count=page_count)
 
 @app.route("/program/<int:program_id>")
 def show_program(program_id):
@@ -190,14 +216,27 @@ def delete_program(program_id):
         return redirect("/program/" + str(program_id))
 
 @app.route("/find_program")
-def find_program():
-    query = request.args.get("query")
-    if query:
-        results = programs.search(query)
-    else:
-        query = ""
-        results = []
-    return render_template("find_program.html", query=query, results=results)
+@app.route("/find_program/<int:page>")
+def find_program(page=1):
+    query = request.args.get("query", "")
+    page_size = 10
+
+    if not query:
+        return render_template("find_program.html", query="", results=[],
+                               page=1, page_count=1)
+
+    result_count = programs.count_search_results(query)
+    page_count = math.ceil(result_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect(f"/find_program/1?query={query}")
+    if page > page_count:
+        return redirect(f"/find_program/{page_count}?query={query}")
+
+    results = programs.search(query, page, page_size)
+    return render_template("find_program.html", query=query, results=results,
+                           page=page, page_count=page_count)
 
 @app.route("/register")
 def register():

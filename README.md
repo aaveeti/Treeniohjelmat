@@ -24,3 +24,25 @@ Voit käynnistää sovelluksen näin:
 ```bash
 $ flask run
 ```
+## Suuren tietomäärän testaaminen
+Testasin sovellusta suurella tietomäärällä. Ensiksi loin tietokantaan seed.py skriptillä:
+- 1000 käyttäjää
+- 100 000 treeniohjelmaa
+- 1 000 000 arviota
+Olin luonut sivutuksen jo ohjelman etusivulle, joten testidata ei vaikuttanut etusivun toimintaan huomattavasti.
+
+Hakusivulla en ollut vielä tehnyt sivutusta, jonka vuoksi hakusanalla "program" (joka hakee kaikki 100 000 treeniohjelmaa) haku kesti noin 2-3 sekunttia.
+
+Lisäsin indeksit:
+```
+CREATE INDEX idx_programs_user_id ON programs(user_id);
+CREATE INDEX idx_programs_level_id ON programs(level_id);
+CREATE INDEX idx_programs_type_id ON programs(type_id);
+CREATE INDEX idx_reviews_program_id ON reviews(program_id);
+CREATE INDEX idx_reviews_user_id ON reviews(user_id);
+```
+Indeksien lisäys ei vaikuttanut 100 000 treeniohjelman hakuun huomattavasti, mutta rajatummat haut, kuten hakusanat "program9" ja "program11" kestävät alle sekunnin, joka on minusta hyväksyttävä tulos.
+
+Lisäsin sivutuksen hakusivulle, jonka jälkeen haku kesti kaikilla hakusanoilla alle sekunnin.
+
+Suuri tietomäärä ei vaikuttanut kirjautumiseen ja rekisteröitymiseen millään tavalla. Käyttäjäsivut toimivat jo valmiiksi tehokkaasti, mutta lisäsin vielä niille sivutuksen, koska se näyttää siistimmältä suurella tietomäärällä.

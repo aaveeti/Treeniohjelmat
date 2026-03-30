@@ -5,7 +5,7 @@
 {% block content %}
 <h2>Etsi ohjelma</h2>
 
-<form action="find_program" method="get">
+<form action="/find_program" method="get">
   <p>
     <label for="query">Hakusana:</label>
     <input type="text" name="query" id="query" value="{{ query }}">
@@ -14,7 +14,7 @@
 </form>
 
 {% if query %}
-<h2>Tulokset</h2>
+<h2>Tulokset hakusanalla "{{ query }}"</h2>
 
 {% for program in results %}
 <div class="program">
@@ -22,7 +22,18 @@
 <strong>Taso:</strong> {{ program.level }} | <strong>Tavoite:</strong> {{ program.type }}<br />
 <strong>Julkaisija:</strong> {{ program.username }} | <strong>Julkaisuaika:</strong> {{ program.created_at }}<br />
 </div>
+{% else %}
+    <p>Ei hakutuloksia</p>
 {% endfor %}
 
+{% if page_count > 1 %}
+<p>
+  <a href="/find_program/{{ page - 1 }}?query={{ query }}">&lt;&lt;</a>
+  Sivu {{ page }}/{{ page_count }}
+  <a href="/find_program/{{ page + 1 }}?query={{ query }}">&gt;&gt;</a>
+</p>
 {% endif %}
+
+{% endif %}
+<hr />
 {% endblock %}
