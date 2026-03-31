@@ -33,9 +33,15 @@
   </div>
   
   {% for message in get_flashed_messages() %}
-  <div class="info">
-    <b>{{ message }}</b>
-  </div>
+    {% if "VIRHE" in message %}
+      <div class="error">
+        <b>{{ message }}</b>
+      </div>
+    {% else %}
+      <div class="info">
+        <b>{{ message }}</b>
+      </div>
+    {% endif %}
     {% endfor %}
 
   {% block content %}{% endblock %}

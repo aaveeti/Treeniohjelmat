@@ -6,28 +6,29 @@
 <h2>Julkaise treeniohjelma</h2>
 <form action="/create_program" method="post">
   <div class="create">
-  <p>
-    <label for="title">Otsikko:</label> <br />
-    <input type="text" name="title" id="title" size="50" maxlength="50" required/>
-  </p>
-  <p>
-    <label for="content">Kuvaus:</label> <br />
-    <textarea name="content" id="content" rows="8" cols="60" maxlength="500" required></textarea>
-  </p>
-  <p>
-    <label for="experience">Kokemustaso:</label> <br />
-    {% for level in levels %}
-    <input type="radio" name="experience" id="experience" value="{{ level.id }}" required/> {{ level.title }}
-    {% endfor %}
-  </p>
-  <p>
-    <label for="workout_type">Treeniohjelman tavoite:</label> <br />
-    {% for type in types %}
-    <input type="radio" name="workout_type" id="workout_type" value="{{ type.id }}" required/> {{ type.title }}
-    {% endfor %}
-  </p>
-  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-  <input type="submit" value="Julkaise" />
- </div>
+    <p><small><i>Tähdellä (*) merkityt kentät ovat pakollisia.</i></small></p>
+    <p>
+      <label for="title">* Otsikko:</label> <br />
+      <input type="text" name="title" id="title" size="50" maxlength="50" required/>
+    </p>
+    <p>
+      <label for="content">* Kuvaus:</label> <br />
+      <textarea name="content" id="content" rows="8" cols="60" maxlength="500" required></textarea>
+    </p>
+    <p>
+      <label for="experience">* Kokemustaso:</label> <br />
+      {% for level in levels %}
+      <input type="radio" name="experience" id="experience" value="{{ level.id }}" required/> {{ level.title }}
+      {% endfor %}
+    </p>
+    <p>
+      <label for="workout_type">* Treeniohjelman tavoite:</label> <br />
+      {% for type in types %}
+      <input type="radio" name="workout_type" id="workout_type" value="{{ type.id }}" required/> {{ type.title }}
+      {% endfor %}
+    </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    <input type="submit" value="Julkaise" />
+  </div>
 </form>
 {% endblock %}

@@ -43,10 +43,22 @@ a:hover {
 }
 
 .content {
-    background-color: lightgray;
+    background-color: #f8f9fa;
     border-radius: 6px;
     margin: 0.5em;
     padding: 0.2em 0.5em;
+}
+
+textarea {
+    width: 80%;
+    min-height: 100px;
+    padding: 0.2em 0.5em;
+    border: 1px solid #2f3e46;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    font-family: inherit;
+    box-sizing: border-box;
+    resize: vertical;
 }
 
 .create {
@@ -76,6 +88,14 @@ a:hover {
     padding: 0.2em 0.5em;
 }
 
+.error {
+    background-color: #bf4d4d;
+    border: 1px solid black;
+    margin: 1em;
+    border-radius: 6px;
+    padding: 0.2em 0.5em;
+}
+
 input[type="submit"] {
     background-color: #52796f;
     color: white;
@@ -91,4 +111,12 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #354f52;
+}
+
+input[type="text"], input[type="password"] {
+    padding: 0.2em 0.5em;
+    border: 1px solid #2f3e46;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    font-family: inherit;
 }
