@@ -98,10 +98,15 @@ def create_program():
     level_id = request.form["experience"]
     type_id = request.form["workout_type"]
 
-    if not title or len(title) > 50:
-        abort(403)
-    if not content or len(content) > 500:
-        abort(403)
+    levels_data = db.get_levels()
+    workout_type_data = db.get_workout_type()
+
+    if not title or not title.strip() or len(title) > 50:
+        flash("VIRHE: otsikko ei voi olla tyhjä")
+        return render_template("new_program.html", levels=levels_data, types=workout_type_data), 400
+    if not content or not content.strip() or len(content) > 500:
+        flash("VIRHE: kuvaus ei voi olla tyhjä")
+        return render_template("new_program.html", levels=levels_data, types=workout_type_data), 400
 
     programs.add_program(title, content, user_id, level_id, type_id)
 
@@ -125,7 +130,7 @@ def create_comment():
     user_id = session.get("user_id")
     comment = request.form["comment"]
 
-    if not comment or len(comment) > 300:
+    if not comment or not comment.strip() or len(comment) > 300:
         abort(400)
     if not 1 <= rating <= 5:
         abort(400)
@@ -177,6 +182,10 @@ def update_program():
     level_id = request.form["experience"]
     type_id = request.form["workout_type"]
 
+    levels_data = db.get_levels()
+    workout_type_data = db.get_workout_type()
+    program = programs.get_program(program_id)
+
     program = programs.get_program(program_id)
     if not program:
         abort(404)
@@ -184,10 +193,14 @@ def update_program():
     if program["user_id"] != session["user_id"]:
         abort(403)
 
-    if not title or len(title) > 50:
-        abort(403)
-    if not content or len(content) > 500:
-        abort(403)
+    if not title or not title.strip() or len(title) > 50:
+        flash("VIRHE: otsikko ei voi olla tyhjä")
+        return render_template("edit_program.html", levels=levels_data,
+                            types=workout_type_data, program=program), 400
+    if not content or not content.strip() or len(content) > 500:
+        flash("VIRHE: kuvaus ei voi olla tyhjä")
+        return render_template("edit_program.html", levels=levels_data,
+                            types=workout_type_data, program=program), 400
 
     programs.update_program(program_id, title, content, level_id, type_id)
 
@@ -249,6 +262,14 @@ def create_user():
     password2 = request.form["password2"]
     if password1 != password2:
         flash("VIRHE: salasanat eivät ole samat")
+        return render_template("register.html"), 400
+
+    if not username or not username.strip():
+        flash("VIRHE: käyttäjänimi ei voi olla tyhjä")
+        return render_template("register.html"), 400
+
+    if not password1 or not password1.strip():
+        flash("VIRHE: salasana ei voi olla tyhjä")
         return render_template("register.html"), 400
 
     try:
